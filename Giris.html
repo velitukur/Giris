@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <title>Matematik Dersleri</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f2f2f2;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 800px;
+      margin: auto;
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      margin-top: 30px;
+    }
+    h1, h2 { color: #333; }
+    p { line-height: 1.6; }
+    button {
+      padding: 10px 15px;
+      margin: 10px 5px 0 0;
+      background: #0275d8;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    button:hover { background: #025aa5; }
+    .danger { background: #d9534f; }
+    .danger:hover { background: #c9302c; }
+  </style>
+</head>
+<body>
+
+  <!-- Ana Menü -->
+  <div class="container" id="questionBox">
+    <h2>Hesabın var mı?</h2>
+    <button onclick="showLogin()">Evet, giriş yapacağım</button>
+    <button onclick="showRegister()">Hayır, kayıt olacağım</button>
+  </div>
+
+  <!-- Giriş ekranı -->
+  <div class="container" id="loginBox" style="display:none;">
+    <h2>Giriş Yap</h2>
+    <input type="email" id="loginEmail" placeholder="E-posta"><br><br>
+    <input type="password" id="loginPassword" placeholder="Şifre"><br><br>
+    <button onclick="login()">Giriş</button>
+    <button class="danger" onclick="goBack()">Geri</button>
+  </div>
+
+  <!-- Kayıt ekranı -->
+  <div class="container" id="registerBox" style="display:none;">
+    <h2>Kayıt Ol</h2>
+    <input type="email" id="registerEmail" placeholder="E-posta"><br><br>
+    <input type="password" id="registerPassword" placeholder="Şifre"><br><br>
+    <button onclick="register()">Kayıt</button>
+    <button class="danger" onclick="goBack()">Geri</button>
+  </div>
+
+  <!-- Matematik içerikleri -->
+  <div class="container" id="welcomeBox" style="display:none;">
+    <h1>Hoş geldin 🎉</h1>
+    <p id="userEmail"></p>
+    <hr>
+    <h2>📘 Matematik Konuları</h2>
+
+    <h3>1. Cebir</h3>
+    <p>Cebir, bilinmeyenler ve değişkenler üzerine kurulu matematiğin temel dallarından biridir.</p>
+
+    <h3>2. Geometri</h3>
+    <p>Geometri; noktalar, doğru parçaları, açılar, üçgenler, dörtgenler ve daireler gibi şekilleri inceler.</p>
+
+    <h3>3. Trigonometri</h3>
+    <p>Trigonometri, üçgenlerin kenar ve açıları arasındaki ilişkileri inceler. Sinüs, kosinüs, tanjant fonksiyonları içerir.</p>
+
+    <h3>4. Analiz</h3>
+    <p>Limit, türev ve integral matematiğin temel analiz konularıdır.</p>
+
+    <h3>5. Olasılık ve İstatistik</h3>
+    <p>Olasılık bir olayın gerçekleşme ihtimalini, istatistik ise verilerin yorumunu kapsar.</p>
+
+    <hr>
+    <button class="danger" onclick="logout()">Çıkış Yap</button>
+  </div>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyDLPQWjwhnYl1jJ-wB3WHjAfCHOxBSEK_8",
+      authDomain: "giris-3a00e.firebaseapp.com",
+      projectId: "giris-3a00e",
+      storageBucket: "giris-3a00e.firebasestorage.app",
+      messagingSenderId: "184255818177",
+      appId: "1:184255818177:web:9c081fefff5ddd17ce2740",
+      measurementId: "G-R1HX69QSJ4"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+
+    // Login
+    function login() {
+      const email = document.getElementById("loginEmail").value;
+      const password = document.getElementById("loginPassword").value;
+      auth.signInWithEmailAndPassword(email, password)
+        .catch(err => alert("❌ " + err.message));
+    }
+
+    // Register
+    function register() {
+      const email = document.getElementById("registerEmail").value;
+      const password = document.getElementById("registerPassword").value;
+      auth.createUserWithEmailAndPassword(email, password)
+        .then(() => {
+          alert("✅ Kayıt başarılı! Şimdi giriş yapabilirsiniz.");
+          showLogin();
+        })
+        .catch(err => alert("❌ " + err.message));
+    }
+
+    // Logout
+    function logout() {
+      auth.signOut();
+    }
+
+    // Geri butonu
+    function goBack() {
+      hideAll();
+      document.getElementById("questionBox").style.display = "block";
+    }
+
+    // Ekran yönlendirme
+    function showRegister() {
+      hideAll();
+      document.getElementById("registerBox").style.display = "block";
+    }
+
+    function showLogin() {
+      hideAll();
+      document.getElementById("loginBox").style.display = "block";
+    }
+
+    function showWelcome(email) {
+      hideAll();
+      document.getElementById("welcomeBox").style.display = "block";
+      document.getElementById("userEmail").innerText = "👤 " + email;
+    }
+
+    function hideAll() {
+      document.getElementById("loginBox").style.display = "none";
+      document.getElementById("registerBox").style.display = "none";
+      document.getElementById("questionBox").style.display = "none";
+      document.getElementById("welcomeBox").style.display = "none";
+    }
+
+    // Kullanıcı durumunu izle
+    auth.onAuthStateChanged(user => {
+      if (user) {
+        showWelcome(user.email);
+      } else {
+        hideAll();
+        document.getElementById("questionBox").style.display = "block";
+      }
+    });
+  </script>
+</body>
+</html>
