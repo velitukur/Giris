@@ -51,6 +51,10 @@
     <input type="password" id="loginPassword" placeholder="Şifre"><br><br>
     <button onclick="login()">Giriş</button>
     <button class="danger" onclick="goBack()">Geri</button>
+    <hr>
+    <h3>Şifremi Unuttum</h3>
+    <input type="email" id="resetEmail" placeholder="Şifre sıfırlama için e-posta"><br><br>
+    <button onclick="sendReset()">Sıfırlama Maili Gönder</button>
   </div>
 
   <!-- Kayıt ekranı -->
@@ -129,6 +133,20 @@
     // Logout
     function logout() {
       auth.signOut();
+    }
+
+    // Şifre sıfırlama
+    function sendReset() {
+      const email = document.getElementById("resetEmail").value.trim();
+      if (!email) {
+        alert("Lütfen e-posta girin.");
+        return;
+      }
+      auth.sendPasswordResetEmail(email)
+        .then(() => {
+          alert("📩 Şifre sıfırlama e-postası gönderildi! Mail kutunuzu ve spam klasörünü kontrol edin.");
+        })
+        .catch(err => alert("❌ " + err.message));
     }
 
     // Geri butonu
